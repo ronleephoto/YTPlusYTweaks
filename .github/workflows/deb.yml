@@ -65,8 +65,8 @@ on:
         default: true
 
       tweak_version:
-        description: "The version of YTLite to use. E.g. 5.2b3 (optional - leave empty to use latest tag from github.com/dayanch96/YTLite/tags)"
-        default: ""
+        description: "The version of YTLite to use. E.g. 5.2b3 (optional - leave empty to use latest release)"
+        default: "5.2.1"
         required: false
         type: string
 

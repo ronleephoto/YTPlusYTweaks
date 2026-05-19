@@ -71,7 +71,17 @@ runs:
           echo "version=$VERSION" >> $GITHUB_OUTPUT
         fi
         
-        deb_url="https://github.com/dayanch96/YTLite/releases/download/v$VERSION/com.dvntm.ytlite_${VERSION}_iphoneos-arm.deb"
-        echo "Downloading YouTube Plus version: $VERSION"
-        wget "$deb_url" --no-verbose -O $WORKSPACE/ytplus.deb
+        if [ "$VERSION" = "5.2.1" ]; then
+          bundled_deb="$WORKSPACE/Resources/deb/com.dvntm.ytlite_5.2.1_iphoneos-arm.deb"
+          if [ ! -f "$bundled_deb" ]; then
+            echo "::error::Bundled YTLite deb not found at $bundled_deb — ensure Resources/deb/com.dvntm.ytlite_5.2.1_iphoneos-arm.deb is committed to the repo"
+            exit 1
+          fi
+          echo "Using bundled YouTube Plus version: $VERSION"
+          cp "$bundled_deb" "$WORKSPACE/ytplus.deb"
+        else
+          deb_url="https://github.com/dayanch96/YTLite/releases/download/v$VERSION/com.dvntm.ytlite_${VERSION}_iphoneos-arm.deb"
+          echo "Downloading YouTube Plus version: $VERSION"
+          wget "$deb_url" --no-verbose -O $WORKSPACE/ytplus.deb
+        fi
 

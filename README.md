@@ -267,12 +267,12 @@ Fill out an [issue form](https://github.com/fosterbarnes/YTPlusYTweaks/issues) w
 - [🇮🇹 FAQ in Italiano](https://github.com/dayanch96/YTLite/blob/main/FAQs/FAQ_IT.md)
 - [🇵🇱 FAQ po polsku](https://github.com/dayanch96/YTLite/blob/main/FAQs/FAQ_PL.md)
 
-## Supported YouTube Version
+## Supported Versions
 <ul>
     <li><strong>Recommended:</strong> <em>20.10.4</em></li>
-   <li><strong>Latest confirmed:</strong> <em>21.13.6</em></li>
-   <li><strong>Date tested:</strong> <em>April 4, 2026</em></li>
-   <li><strong>YouTube Plus:</strong> <em>5.2 beta 4</em></li>
+   <li><strong>Latest confirmed:</strong> <em>21.19.02</em></li>
+   <li><strong>Date tested:</strong> <em>May 16, 2026</em></li>
+   <li><strong>YouTube Plus:</strong> <em>5.2.1</em></li>
 </ul>
 
 ## Tweak Integration Details
@@ -358,3 +358,7 @@ Thank you to everyone that made this project possible! This project would not ex
 [theos](https://github.com/theos) - theos, SDKs
 
 [Tonwalter888](https://github.com/Tonwalter888/) - YTUHD, SDKs
+
+## Join the Telegram channel for more info
+
+[https://t.me/+eMTckUjVWWsxOGZh](https://t.me/+eMTckUjVWWsxOGZh)
