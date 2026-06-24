@@ -58,6 +58,12 @@ on:
         required: true
         default: false
 
+      enable_autoflex:
+        description: "Build AutoFLEX (FLEX debugger)"
+        type: boolean
+        required: true
+        default: false
+
       enable_yougroupsettings:
         description: "Build YouGroupSettings"
         type: boolean
@@ -119,7 +125,8 @@ jobs:
              [ "${{ inputs.enable_ytweaks }}" = "true" ] || \
              [ "${{ inputs.enable_yticons }}" = "true" ] || \
              [ "${{ inputs.enable_yougroupsettings }}" = "true" ] || \
-             [ "${{ inputs.enable_gonerino }}" = "true" ]; then
+             [ "${{ inputs.enable_gonerino }}" = "true" ] || \
+             [ "${{ inputs.enable_autoflex }}" = "true" ]; then
             echo "enabled=true" >> $GITHUB_OUTPUT
             echo "Tweaks are enabled"
           else
@@ -141,6 +148,7 @@ jobs:
           enable_yticons: ${{ steps.check_tweaks.outputs.enabled == 'true' && inputs.enable_yticons || 'false' }}
           enable_demc: ${{ steps.check_tweaks.outputs.enabled == 'true' && inputs.enable_demc || 'false' }}
           enable_gonerino: ${{ steps.check_tweaks.outputs.enabled == 'true' && inputs.enable_gonerino || 'false' }}
+          enable_autoflex: ${{ steps.check_tweaks.outputs.enabled == 'true' && inputs.enable_autoflex || 'false' }}
 
       - name: Cache Theos
         if: steps.check_tweaks.outputs.enabled == 'true'
@@ -204,6 +212,7 @@ jobs:
           enable_yticons: ${{ inputs.enable_yticons }}
           enable_demc: ${{ inputs.enable_demc }}
           enable_gonerino: ${{ inputs.enable_gonerino }}
+          enable_autoflex: ${{ inputs.enable_autoflex }}
           sdk_version: ${{ inputs.sdk_version }}
           youpip_commit: ${{ steps.commit_hashes.outputs.youpip }}
           ytuhd_commit: ${{ steps.commit_hashes.outputs.ytuhd }}
@@ -215,6 +224,8 @@ jobs:
           yticons_commit: ${{ steps.commit_hashes.outputs.yticons }}
           demc_commit: ${{ steps.commit_hashes.outputs.demc }}
           gonerino_commit: ${{ steps.commit_hashes.outputs.gonerino }}
+          autoflex_commit: ${{ steps.commit_hashes.outputs.autoflex }}
+          flex_commit: ${{ steps.commit_hashes.outputs.flex }}
           ytvo_commit: ${{ steps.commit_hashes.outputs.ytvo }}
 
       - name: Clone tweaks
@@ -231,6 +242,7 @@ jobs:
           enable_yticons: ${{ inputs.enable_yticons }}
           enable_demc: ${{ inputs.enable_demc }}
           enable_gonerino: ${{ inputs.enable_gonerino }}
+          enable_autoflex: ${{ inputs.enable_autoflex }}
           cache_youpip_hit: ${{ steps.cache_tweaks_step.outputs.cache_youpip_hit }}
           cache_ytuhd_hit: ${{ steps.cache_tweaks_step.outputs.cache_ytuhd_hit }}
           cache_ryd_hit: ${{ steps.cache_tweaks_step.outputs.cache_ryd_hit }}
@@ -241,6 +253,7 @@ jobs:
           cache_yticons_hit: ${{ steps.cache_tweaks_step.outputs.cache_yticons_hit }}
           cache_demc_hit: ${{ steps.cache_tweaks_step.outputs.cache_demc_hit }}
           cache_gonerino_hit: ${{ steps.cache_tweaks_step.outputs.cache_gonerino_hit }}
+          cache_autoflex_hit: ${{ steps.cache_tweaks_step.outputs.cache_autoflex_hit }}
           cache_ytvo_hit: ${{ steps.cache_tweaks_step.outputs.cache_ytvo_hit }}
           workspace: ${{ github.workspace }}
 
@@ -258,6 +271,7 @@ jobs:
           enable_yticons: ${{ inputs.enable_yticons }}
           enable_demc: ${{ inputs.enable_demc }}
           enable_gonerino: ${{ inputs.enable_gonerino }}
+          enable_autoflex: ${{ inputs.enable_autoflex }}
           cache_youpip_hit: ${{ steps.cache_tweaks_step.outputs.cache_youpip_hit }}
           cache_ytuhd_hit: ${{ steps.cache_tweaks_step.outputs.cache_ytuhd_hit }}
           cache_ryd_hit: ${{ steps.cache_tweaks_step.outputs.cache_ryd_hit }}
@@ -268,6 +282,7 @@ jobs:
           cache_yticons_hit: ${{ steps.cache_tweaks_step.outputs.cache_yticons_hit }}
           cache_demc_hit: ${{ steps.cache_tweaks_step.outputs.cache_demc_hit }}
           cache_gonerino_hit: ${{ steps.cache_tweaks_step.outputs.cache_gonerino_hit }}
+          cache_autoflex_hit: ${{ steps.cache_tweaks_step.outputs.cache_autoflex_hit }}
           cache_ytvo_hit: ${{ steps.cache_tweaks_step.outputs.cache_ytvo_hit }}
           theos_path: ${{ github.workspace }}/theos
           workspace: ${{ github.workspace }}
@@ -287,6 +302,7 @@ jobs:
           # yticons.deb -> YTIcons
           # demc.deb -> DontEatMyContent
           # gonerino.deb -> Gonerino
+          # autoflex.deb -> AutoFLEX
           
           cd ${{ github.workspace }}
           mkdir -p debs
@@ -313,6 +329,7 @@ jobs:
           [ -f "yticons.deb" ] && mv "yticons.deb" "YTIcons.deb"
           [ -f "demc.deb" ] && mv "demc.deb" "DontEatMyContent.deb"
           [ -f "gonerino.deb" ] && mv "gonerino.deb" "Gonerino.deb"
+          [ -f "autoflex.deb" ] && mv "autoflex.deb" "AutoFLEX.deb"
           echo "Renamed DEB files to their full names"
 
       - name: Zip DEBs

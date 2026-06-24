@@ -21,6 +21,8 @@ inputs:
     required: true
   enable_gonerino:
     required: true
+  enable_autoflex:
+    required: true
   sdk_version:
     required: true
   youpip_commit:
@@ -42,6 +44,10 @@ inputs:
   demc_commit:
     required: false
   gonerino_commit:
+    required: false
+  autoflex_commit:
+    required: false
+  flex_commit:
     required: false
   ytvo_commit:
     required: false
@@ -77,6 +83,9 @@ outputs:
   cache_gonerino_hit:
     description: "Cache hit status for Gonerino"
     value: ${{ steps.cache_gonerino.outputs.cache-hit }}
+  cache_autoflex_hit:
+    description: "Cache hit status for AutoFLEX"
+    value: ${{ steps.cache_autoflex.outputs.cache-hit }}
   cache_ytvo_hit:
     description: "Cache hit status for YTVideoOverlay"
     value: ${{ steps.cache_ytvo.outputs.cache-hit }}
@@ -163,6 +172,14 @@ runs:
       with:
         path: gonerino.deb
         key: gonerino-${{ inputs.gonerino_commit }}-sdk${{ inputs.sdk_version }}
+
+    - name: Cache AutoFLEX
+      if: inputs.enable_autoflex == 'true'
+      id: cache_autoflex
+      uses: actions/cache@v4
+      with:
+        path: autoflex.deb
+        key: autoflex-${{ inputs.autoflex_commit }}-flex${{ inputs.flex_commit }}-sdk${{ inputs.sdk_version }}
 
     - name: Cache YTVideoOverlay
       if: inputs.enable_yq == 'true' || inputs.enable_youpip == 'true'

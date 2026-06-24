@@ -58,6 +58,12 @@ on:
         required: true
         default: false
 
+      enable_autoflex:
+        description: "Integrate AutoFLEX (FLEX debugger)"
+        type: boolean
+        required: true
+        default: false
+
       enable_yougroupsettings:
         description: "Group Tweak Settings (YouGroupSettings)"
         type: boolean
@@ -128,7 +134,7 @@ jobs:
       - name: Hide sensitive inputs
         uses: levibostian/action-hide-sensitive-inputs@v1
         with:
-          exclude_inputs: bundle_id,display_name,enable_demc,enable_ryd,enable_youpip,enable_yq,enable_ytabconfig,enable_ytweaks,enable_yticons,enable_yougroupsettings,enable_ytuhd,enable_gonerino,info_note,tweak_version,sdk_version
+          exclude_inputs: bundle_id,display_name,enable_demc,enable_ryd,enable_youpip,enable_yq,enable_ytabconfig,enable_ytweaks,enable_yticons,enable_yougroupsettings,enable_ytuhd,enable_gonerino,enable_autoflex,info_note,tweak_version,sdk_version
 
       - name: Check if any tweaks are enabled
         id: check_tweaks
@@ -142,7 +148,8 @@ jobs:
              [ "${{ inputs.enable_ytweaks }}" = "true" ] || \
              [ "${{ inputs.enable_yticons }}" = "true" ] || \
              [ "${{ inputs.enable_yougroupsettings }}" = "true" ] || \
-             [ "${{ inputs.enable_gonerino }}" = "true" ]; then
+             [ "${{ inputs.enable_gonerino }}" = "true" ] || \
+             [ "${{ inputs.enable_autoflex }}" = "true" ]; then
             echo "enabled=true" >> $GITHUB_OUTPUT
             echo "Tweaks are enabled"
           else
@@ -164,6 +171,7 @@ jobs:
           enable_yticons: ${{ steps.check_tweaks.outputs.enabled == 'true' && inputs.enable_yticons || 'false' }}
           enable_demc: ${{ steps.check_tweaks.outputs.enabled == 'true' && inputs.enable_demc || 'false' }}
           enable_gonerino: ${{ steps.check_tweaks.outputs.enabled == 'true' && inputs.enable_gonerino || 'false' }}
+          enable_autoflex: ${{ steps.check_tweaks.outputs.enabled == 'true' && inputs.enable_autoflex || 'false' }}
 
       - name: Download and validate IPA
         run: |
@@ -279,6 +287,7 @@ jobs:
           enable_yticons: ${{ inputs.enable_yticons }}
           enable_demc: ${{ inputs.enable_demc }}
           enable_gonerino: ${{ inputs.enable_gonerino }}
+          enable_autoflex: ${{ inputs.enable_autoflex }}
           sdk_version: ${{ inputs.sdk_version }}
           youpip_commit: ${{ steps.commit_hashes.outputs.youpip }}
           ytuhd_commit: ${{ steps.commit_hashes.outputs.ytuhd }}
@@ -290,6 +299,8 @@ jobs:
           yticons_commit: ${{ steps.commit_hashes.outputs.yticons }}
           demc_commit: ${{ steps.commit_hashes.outputs.demc }}
           gonerino_commit: ${{ steps.commit_hashes.outputs.gonerino }}
+          autoflex_commit: ${{ steps.commit_hashes.outputs.autoflex }}
+          flex_commit: ${{ steps.commit_hashes.outputs.flex }}
           ytvo_commit: ${{ steps.commit_hashes.outputs.ytvo }}
 
       - name: Clone tweaks
@@ -306,6 +317,7 @@ jobs:
           enable_yticons: ${{ inputs.enable_yticons }}
           enable_demc: ${{ inputs.enable_demc }}
           enable_gonerino: ${{ inputs.enable_gonerino }}
+          enable_autoflex: ${{ inputs.enable_autoflex }}
           cache_youpip_hit: ${{ steps.cache_tweaks_step.outputs.cache_youpip_hit }}
           cache_ytuhd_hit: ${{ steps.cache_tweaks_step.outputs.cache_ytuhd_hit }}
           cache_ryd_hit: ${{ steps.cache_tweaks_step.outputs.cache_ryd_hit }}
@@ -316,6 +328,7 @@ jobs:
           cache_yticons_hit: ${{ steps.cache_tweaks_step.outputs.cache_yticons_hit }}
           cache_demc_hit: ${{ steps.cache_tweaks_step.outputs.cache_demc_hit }}
           cache_gonerino_hit: ${{ steps.cache_tweaks_step.outputs.cache_gonerino_hit }}
+          cache_autoflex_hit: ${{ steps.cache_tweaks_step.outputs.cache_autoflex_hit }}
           cache_ytvo_hit: ${{ steps.cache_tweaks_step.outputs.cache_ytvo_hit }}
           workspace: ${{ github.workspace }}
 
@@ -333,6 +346,7 @@ jobs:
           enable_yticons: ${{ inputs.enable_yticons }}
           enable_demc: ${{ inputs.enable_demc }}
           enable_gonerino: ${{ inputs.enable_gonerino }}
+          enable_autoflex: ${{ inputs.enable_autoflex }}
           cache_youpip_hit: ${{ steps.cache_tweaks_step.outputs.cache_youpip_hit }}
           cache_ytuhd_hit: ${{ steps.cache_tweaks_step.outputs.cache_ytuhd_hit }}
           cache_ryd_hit: ${{ steps.cache_tweaks_step.outputs.cache_ryd_hit }}
@@ -343,6 +357,7 @@ jobs:
           cache_yticons_hit: ${{ steps.cache_tweaks_step.outputs.cache_yticons_hit }}
           cache_demc_hit: ${{ steps.cache_tweaks_step.outputs.cache_demc_hit }}
           cache_gonerino_hit: ${{ steps.cache_tweaks_step.outputs.cache_gonerino_hit }}
+          cache_autoflex_hit: ${{ steps.cache_tweaks_step.outputs.cache_autoflex_hit }}
           cache_ytvo_hit: ${{ steps.cache_tweaks_step.outputs.cache_ytvo_hit }}
           theos_path: ${{ github.workspace }}/theos
           workspace: ${{ github.workspace }}

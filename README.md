@@ -25,7 +25,8 @@ Added tweaks:
 - [YTABConfig](https://github.com/PoomSmart/YTABConfig)
 - [YTIcons](https://github.com/PoomSmart/YTIcons)
 - [YouGroupSettings](https://github.com/fosterbarnes/YouGroupSettings)
-- [Gonerino](https://github.com/castdrian/Gonerino)
+- [Gonerino](https://github.com/fosterbarnes/YGonerino)
+- [AutoFLEX](https://github.com/pwnless/AutoFLEX)
 
 Original repo: https://github.com/dayanch96/YTLite
 
@@ -183,6 +184,7 @@ Tweak Integration Flags:
     --enable-yougroupsettings    Settings (default: true)
     --enable-yticons             YTIcons (default: false)
     --enable-gonerino            Gonerino (default: false)
+    --enable-autoflex            AutoFLEX (default: false)
 
     --disable-youpip             YouPiP
     --disable-ytuhd              YTUHD
@@ -194,6 +196,7 @@ Tweak Integration Flags:
     --disable-yougroupsettings   YouGroupSettings
     --disable-yticons            YTIcons
     --disable-gonerino           Gonerino
+    --disable-autoflex           AutoFLEX
 
 Other Options:
     -h, --help                   Show this help message
@@ -270,8 +273,8 @@ Fill out an [issue form](https://github.com/fosterbarnes/YTPlusYTweaks/issues) w
 ## Supported Versions
 <ul>
     <li><strong>Recommended:</strong> <em>20.10.4</em></li>
-   <li><strong>Latest confirmed:</strong> <em>21.19.02</em></li>
-   <li><strong>Date tested:</strong> <em>May 16, 2026</em></li>
+   <li><strong>Latest confirmed:</strong> <em>21.24.3</em></li>
+   <li><strong>Date tested:</strong> <em>June 17, 2026</em></li>
    <li><strong>YouTube Plus:</strong> <em>5.2.1</em></li>
 </ul>
 
@@ -340,8 +343,14 @@ Fill out an [issue form](https://github.com/fosterbarnes/YTPlusYTweaks/issues) w
 
 <details>
   <summary>Gonerino</summary>
-  <p>Gonerino is a tweak developed by <a href="https://github.com/castdrian">castdrian</a> that lets you block certain content from your home feed.</p>
-  <p>Source code and additional information are available <a href="https://github.com/castdrian/Gonerino">in castdrian's GitHub repository</a>.</p>
+  <p>Gonerino is a tweak developed by <a href="https://github.com/castdrian">castdrian</a> that lets you block certain content from your home feed. Forked by <a href="https://github.com/FosterBarnes">FosterBarnes</a> as <a href="https://github.com/fosterbarnes/YGonerino">YGonerino</a> with a v1.3.3 fix for home feed blocking.</p>
+  <p>Source code and additional information are available <a href="https://github.com/fosterbarnes/YGonerino">in fosterbarnes's GitHub repository</a>.</p>
+</details>
+
+<details>
+  <summary>AutoFLEX</summary>
+  <p>AutoFLEX is a tweak developed by <a href="https://github.com/pwnless">pwnless</a> that injects the <a href="https://github.com/FLEXTool/FLEX">FLEX</a> in-app debugger into sideloaded apps.</p>
+  <p>Source code and additional information are available <a href="https://github.com/pwnless/AutoFLEX">in pwnless's GitHub repository</a>.</p>
 </details>
 
 ## Credits
@@ -353,7 +362,9 @@ Thank you to everyone that made this project possible! This project would not ex
 
 [therealFoxster](https://github.com/therealFoxster) - DontEatMyContent
 
-[castdrian](https://github.com/castdrian/Gonerino) - Gonerino
+[castdrian](https://github.com/castdrian/Gonerino) - Gonerino (original), [fosterbarnes](https://github.com/fosterbarnes/YGonerino) - YGonerino fork
+
+[pwnless](https://github.com/pwnless/AutoFLEX) - AutoFLEX
 
 [theos](https://github.com/theos) - theos, SDKs
 

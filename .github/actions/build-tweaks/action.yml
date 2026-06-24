@@ -21,6 +21,8 @@ inputs:
     required: true
   enable_gonerino:
     required: true
+  enable_autoflex:
+    required: true
   cache_youpip_hit:
     required: true
   cache_ytuhd_hit:
@@ -40,6 +42,8 @@ inputs:
   cache_demc_hit:
     required: true
   cache_gonerino_hit:
+    required: true
+  cache_autoflex_hit:
     required: true
   cache_ytvo_hit:
     required: true
@@ -67,6 +71,7 @@ runs:
         ENABLE_YTICONS: ${{ inputs.enable_yticons }}
         ENABLE_DEMC: ${{ inputs.enable_demc }}
         ENABLE_GONERINO: ${{ inputs.enable_gonerino }}
+        ENABLE_AUTOFLEX: ${{ inputs.enable_autoflex }}
         CACHE_YOUPIP_HIT: ${{ inputs.cache_youpip_hit }}
         CACHE_YTUHD_HIT: ${{ inputs.cache_ytuhd_hit }}
         CACHE_RYD_HIT: ${{ inputs.cache_ryd_hit }}
@@ -77,6 +82,7 @@ runs:
         CACHE_YTICONS_HIT: ${{ inputs.cache_yticons_hit }}
         CACHE_DEMC_HIT: ${{ inputs.cache_demc_hit }}
         CACHE_GONERINO_HIT: ${{ inputs.cache_gonerino_hit }}
+        CACHE_AUTOFLEX_HIT: ${{ inputs.cache_autoflex_hit }}
         CACHE_YTVO_HIT: ${{ inputs.cache_ytvo_hit }}
       run: |
         cd ${{ inputs.workspace }}
@@ -110,6 +116,20 @@ runs:
             fi
           fi
         done
+        
+        # AutoFLEX bundles FLEX sources via build.sh
+        if [ "$ENABLE_AUTOFLEX" = "true" ]; then
+          if [ "$CACHE_AUTOFLEX_HIT" != "true" ]; then
+            echo "Building AutoFLEX..."
+            cd AutoFLEX
+            chmod +x build.sh
+            ./build.sh
+            mv packages/*.deb "${{ inputs.workspace }}/autoflex.deb"
+            cd ..
+          else
+            echo "Using cached AutoFLEX"
+          fi
+        fi
         
         # Handle conditional YTVideoOverlay
         if [ "$ENABLE_YQ" = "true" ] || [ "$ENABLE_YOUPIP" = "true" ]; then

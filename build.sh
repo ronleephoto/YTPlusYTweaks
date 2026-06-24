@@ -20,6 +20,7 @@ ENABLE_YTWEAKS=true
 ENABLE_YTICONS=false
 ENABLE_YOUGROUPSETTINGS=true
 ENABLE_GONERINO=false
+ENABLE_AUTOFLEX=false
 TWEAK_VERSION=""
 TWEAK_VERSION_PROVIDED=false
 DISPLAY_NAME="YouTube"
@@ -77,6 +78,7 @@ Tweak Integration Flags:
     --enable-yougroupsettings    Settings (default: true)
     --enable-yticons             YTIcons (default: false)
     --enable-gonerino            Gonerino (default: false)
+    --enable-autoflex            AutoFLEX (default: false)
 
     --disable-youpip             YouPiP
     --disable-ytuhd              YTUHD
@@ -88,6 +90,7 @@ Tweak Integration Flags:
     --disable-yougroupsettings   YouGroupSettings
     --disable-yticons            YTIcons
     --disable-gonerino           Gonerino
+    --disable-autoflex           AutoFLEX
 
 Other Options:
     -h, --help                   Show this help message
@@ -153,6 +156,7 @@ parse_args() {
                 ENABLE_YTICONS=true
                 ENABLE_YOUGROUPSETTINGS=true
                 ENABLE_GONERINO=true
+                ENABLE_AUTOFLEX=true
                 shift
                 ;;
             --disable-all)
@@ -166,6 +170,7 @@ parse_args() {
                 ENABLE_YTICONS=false
                 ENABLE_YOUGROUPSETTINGS=false
                 ENABLE_GONERINO=false
+                ENABLE_AUTOFLEX=false
                 shift
                 ;;
             --enable-*)
@@ -183,6 +188,7 @@ parse_args() {
                     yticons) ENABLE_YTICONS=true ;;
                     yougroupsettings) ENABLE_YOUGROUPSETTINGS=true ;;
                     gonerino) ENABLE_GONERINO=true ;;
+                    autoflex) ENABLE_AUTOFLEX=true ;;
                     *)
                         print_error "Unknown tweak: $tweak_name"
                         usage
@@ -206,6 +212,7 @@ parse_args() {
                     yticons) ENABLE_YTICONS=false ;;
                     yougroupsettings) ENABLE_YOUGROUPSETTINGS=false ;;
                     gonerino) ENABLE_GONERINO=false ;;
+                    autoflex) ENABLE_AUTOFLEX=false ;;
                     *)
                         print_error "Unknown tweak: $tweak_name"
                         usage
@@ -331,7 +338,8 @@ any_tweaks_enabled() {
     [[ "$ENABLE_YTWEAKS" == "true" ]] || \
     [[ "$ENABLE_YTICONS" == "true" ]] || \
     [[ "$ENABLE_YOUGROUPSETTINGS" == "true" ]] || \
-    [[ "$ENABLE_GONERINO" == "true" ]]
+    [[ "$ENABLE_GONERINO" == "true" ]] || \
+    [[ "$ENABLE_AUTOFLEX" == "true" ]]
 }
 
 # Setup workspace
@@ -585,9 +593,9 @@ clone_tweak() {
     if [[ ! -d "$name" ]]; then
         print_info "Cloning $name..."
         if [[ -n "$extra_flags" ]]; then
-            git clone --quiet --depth=1 $extra_flags "$repo_url"
+            git clone --quiet --depth=1 $extra_flags "$repo_url" "$name"
         else
-            git clone --quiet --depth=1 "$repo_url"
+            git clone --quiet --depth=1 "$repo_url" "$name"
         fi
     fi
 }
@@ -611,7 +619,8 @@ clone_tweaks() {
     clone_tweak "$ENABLE_YTWEAKS" "YTweaks" "ytwks.deb" "https://github.com/fosterbarnes/YTweaks.git"
     clone_tweak "$ENABLE_YTICONS" "YTIcons" "yticons.deb" "https://github.com/PoomSmart/YTIcons.git"
     clone_tweak "$ENABLE_DEMC" "DontEatMyContent" "demc.deb" "https://github.com/therealFoxster/DontEatMyContent.git" "--recurse-submodules"
-    clone_tweak "$ENABLE_GONERINO" "Gonerino" "gonerino.deb" "https://github.com/castdrian/Gonerino.git"
+    clone_tweak "$ENABLE_GONERINO" "Gonerino" "gonerino.deb" "https://github.com/fosterbarnes/YGonerino.git"
+    clone_tweak "$ENABLE_AUTOFLEX" "AutoFLEX" "autoflex.deb" "https://github.com/pwnless/AutoFLEX.git"
     
     # YTVideoOverlay is required if YouPiP or YouQuality is enabled
     if [[ "$ENABLE_YQ" == "true" ]] || [[ "$ENABLE_YOUPIP" == "true" ]]; then
@@ -722,6 +731,12 @@ copy_prebuilt_debs() {
         [[ "$ENABLE_GONERINO" == "true" ]] && missing_debs+=("Gonerino")
     fi
     
+    if copy_prebuilt_deb "$ENABLE_AUTOFLEX" "autoflex.deb" "AutoFLEX" "autoflex*.deb" "AutoFLEX.deb"; then
+        ((deb_count++))
+    else
+        [[ "$ENABLE_AUTOFLEX" == "true" ]] && missing_debs+=("AutoFLEX")
+    fi
+    
     # YTVideoOverlay is required if YouPiP or YouQuality is enabled
     if [[ "$ENABLE_YQ" == "true" ]] || [[ "$ENABLE_YOUPIP" == "true" ]]; then
         if copy_prebuilt_deb "true" "ytvo.deb" "YTVideoOverlay" "ytvo*.deb" "YTVideoOverlay.deb"; then
@@ -793,6 +808,19 @@ build_tweaks() {
     build_tweak "$ENABLE_DEMC" "DontEatMyContent" "demc.deb"
     build_tweak "$ENABLE_GONERINO" "Gonerino" "gonerino.deb"
     
+    if [[ "$ENABLE_AUTOFLEX" == "true" ]]; then
+        if [[ "$USE_PREBUILT_DEBS" == "true" ]] && [[ -f "$BUILD_DIR/autoflex.deb" ]]; then
+            print_info "Skipping AutoFLEX build (using pre-built)"
+        else
+            print_info "Building AutoFLEX..."
+            cd AutoFLEX
+            chmod +x build.sh
+            ./build.sh
+            mv packages/*.deb "$BUILD_DIR/autoflex.deb"
+            cd ..
+        fi
+    fi
+    
     # YTVideoOverlay is required if YouPiP or YouQuality is enabled
     if [[ "$ENABLE_YQ" == "true" ]] || [[ "$ENABLE_YOUPIP" == "true" ]]; then
         build_tweak "true" "YTVideoOverlay" "ytvo.deb"
@@ -838,6 +866,7 @@ inject_tweaks() {
                    [[ "$lower_name" =~ ^yticons ]] || [[ "$deb_name" == "YTIcons.deb" ]] || \
                    [[ "$lower_name" =~ ^demc ]] || [[ "$deb_name" == "DontEatMyContent.deb" ]] || \
                    [[ "$lower_name" =~ ^gonerino ]] || [[ "$deb_name" == "Gonerino.deb" ]] || \
+                   [[ "$lower_name" =~ ^autoflex ]] || [[ "$deb_name" == "AutoFLEX.deb" ]] || \
                    [[ "$lower_name" =~ ^ytvo ]] || [[ "$deb_name" == "YTVideoOverlay.deb" ]]; then
                     is_recognized=true
                 fi
@@ -906,6 +935,7 @@ main() {
     [[ "$ENABLE_YTICONS" == "true" ]] && echo "  - YTIcons"
     [[ "$ENABLE_YOUGROUPSETTINGS" == "true" ]] && echo "  - YouGroupSettings"
     [[ "$ENABLE_GONERINO" == "true" ]] && echo "  - Gonerino"
+    [[ "$ENABLE_AUTOFLEX" == "true" ]] && echo "  - AutoFLEX"
     
     setup_workspace
     setup_ipa

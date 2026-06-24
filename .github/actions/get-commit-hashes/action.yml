@@ -21,6 +21,8 @@ inputs:
     required: true
   enable_gonerino:
     required: true
+  enable_autoflex:
+    required: true
 
 outputs:
   youpip:
@@ -53,6 +55,12 @@ outputs:
   gonerino:
     description: "Gonerino commit hash"
     value: ${{ steps.get_commits.outputs.gonerino }}
+  autoflex:
+    description: "AutoFLEX commit hash"
+    value: ${{ steps.get_commits.outputs.autoflex }}
+  flex:
+    description: "FLEX commit hash"
+    value: ${{ steps.get_commits.outputs.flex }}
   ytvo:
     description: "YTVideoOverlay commit hash"
     value: ${{ steps.get_commits.outputs.ytvo }}
@@ -80,6 +88,7 @@ runs:
         ENABLE_YTICONS: ${{ inputs.enable_yticons }}
         ENABLE_DEMC: ${{ inputs.enable_demc }}
         ENABLE_GONERINO: ${{ inputs.enable_gonerino }}
+        ENABLE_AUTOFLEX: ${{ inputs.enable_autoflex }}
       run: |
         cd ${{ github.workspace }}
         
@@ -107,7 +116,8 @@ runs:
           "ENABLE_YTWEAKS|ytwks|https://github.com/fosterbarnes/YTweaks.git|YTweaks"
           "ENABLE_YTICONS|yticons|https://github.com/PoomSmart/YTIcons.git|YTIcons"
           "ENABLE_DEMC|demc|https://github.com/therealFoxster/DontEatMyContent.git|DontEatMyContent"
-          "ENABLE_GONERINO|gonerino|https://github.com/castdrian/Gonerino.git|Gonerino"
+          "ENABLE_GONERINO|gonerino|https://github.com/fosterbarnes/YGonerino.git|Gonerino"
+          "ENABLE_AUTOFLEX|autoflex|https://github.com/pwnless/AutoFLEX.git|AutoFLEX"
         )
         
         for tweak in "${tweaks[@]}"; do
@@ -118,6 +128,13 @@ runs:
             echo "$display_name commit: $commit_hash"
           fi
         done
+        
+        # AutoFLEX bundles FLEX sources at build time
+        if [ "$ENABLE_AUTOFLEX" = "true" ]; then
+          FLEX_COMMIT=$(get_commit_hash "https://github.com/FLEXTool/FLEX.git")
+          echo "flex=$FLEX_COMMIT" >> $GITHUB_OUTPUT
+          echo "FLEX commit: $FLEX_COMMIT"
+        fi
         
         # Handle conditional YTVideoOverlay
         if [ "$ENABLE_YQ" = "true" ] || [ "$ENABLE_YOUPIP" = "true" ]; then

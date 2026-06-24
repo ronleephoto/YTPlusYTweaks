@@ -21,6 +21,8 @@ inputs:
     required: true
   enable_gonerino:
     required: true
+  enable_autoflex:
+    required: true
   cache_youpip_hit:
     required: true
   cache_ytuhd_hit:
@@ -40,6 +42,8 @@ inputs:
   cache_demc_hit:
     required: true
   cache_gonerino_hit:
+    required: true
+  cache_autoflex_hit:
     required: true
   cache_ytvo_hit:
     required: true
@@ -63,6 +67,7 @@ runs:
         ENABLE_YTICONS: ${{ inputs.enable_yticons }}
         ENABLE_DEMC: ${{ inputs.enable_demc }}
         ENABLE_GONERINO: ${{ inputs.enable_gonerino }}
+        ENABLE_AUTOFLEX: ${{ inputs.enable_autoflex }}
         CACHE_YOUPIP_HIT: ${{ inputs.cache_youpip_hit }}
         CACHE_YTUHD_HIT: ${{ inputs.cache_ytuhd_hit }}
         CACHE_RYD_HIT: ${{ inputs.cache_ryd_hit }}
@@ -73,6 +78,7 @@ runs:
         CACHE_YTICONS_HIT: ${{ inputs.cache_yticons_hit }}
         CACHE_DEMC_HIT: ${{ inputs.cache_demc_hit }}
         CACHE_GONERINO_HIT: ${{ inputs.cache_gonerino_hit }}
+        CACHE_AUTOFLEX_HIT: ${{ inputs.cache_autoflex_hit }}
         CACHE_YTVO_HIT: ${{ inputs.cache_ytvo_hit }}
       run: |
         cd ${{ inputs.workspace }}
@@ -88,14 +94,15 @@ runs:
           "ENABLE_YTWEAKS|CACHE_YTWKS_HIT|https://github.com/fosterbarnes/YTweaks.git|YTweaks|"
           "ENABLE_YTICONS|CACHE_YTICONS_HIT|https://github.com/PoomSmart/YTIcons.git|YTIcons|"
           "ENABLE_DEMC|CACHE_DEMC_HIT|https://github.com/therealFoxster/DontEatMyContent.git|DontEatMyContent|--recurse-submodules"
-          "ENABLE_GONERINO|CACHE_GONERINO_HIT|https://github.com/castdrian/Gonerino.git|Gonerino|"
+          "ENABLE_GONERINO|CACHE_GONERINO_HIT|https://github.com/fosterbarnes/YGonerino.git|Gonerino|"
+          "ENABLE_AUTOFLEX|CACHE_AUTOFLEX_HIT|https://github.com/pwnless/AutoFLEX.git|AutoFLEX|"
         )
         
         for tweak in "${tweaks[@]}"; do
           IFS='|' read -r enable_var cache_var repo_url display_name extra_flags <<< "$tweak"
           if [ "${!enable_var}" = "true" ] && [ "${!cache_var}" != "true" ]; then
             echo "Cloning $display_name..."
-            git clone --quiet --depth=1 $extra_flags "$repo_url"
+            git clone --quiet --depth=1 $extra_flags "$repo_url" "$display_name"
           fi
         done
         
